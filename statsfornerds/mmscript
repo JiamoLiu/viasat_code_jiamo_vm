@@ -1,0 +1,10 @@
+sudo iptables -P FORWARD ACCEPT  
+#mm-link 48mbits.shape youtube_stats_log_1-32VFLs1COxo.pcap.download.shape --uplink-log=48mbits.shape.log --downlink-log=youtube_stats_log_1-32VFLs1COxo.pcap.download.log --meter-all
+
+
+mm-link 48mbits.shape youtube_stats_log_1-32VFLs1COxo.pcap.smoothened.download.shape --uplink-log=48mbits.shape.log --downlink-log=youtube_stats_log_1-32VFLs1COxo.pcap.download.log --meter-all
+
+#mm-link 24mbits.shape 24mbits.shape --uplink-log=24mbits.shape.log --downlink-log=youtube_stats_log_1-32VFLs1COxo.pcap.download.log --meter-all
+
+#mm-link 48mbits.shape 48mbits.shape  --uplink-log=48mbits.upload.log --downlink-log=48mbits.download.log --meter-all
+#python3 collect.py --mode run --link https://www.youtube.com/watch?v=i12CvB_eWas --times 1 --id 1 --iface ingress
