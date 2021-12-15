@@ -4,6 +4,8 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 import matplotlib.colors as colors
 import random
+import pandas as pd
+from glob import glob
 markers = ['o',">",""]
 markers = [""]
 #linestype = ["solid","dotted"]
@@ -43,19 +45,19 @@ def parse_packets(allcaps,pkts):
 
 
 
-def get_youtube_video_ip(filename,match = "edgedl"):
+def get_youtube_video_ip(filename,matches = ["edgedl"]):
     caps = read_capture(filename,"dns")
-    ip = None
+    ip = []
     for pkt in caps:
         try:
             resp = (pkt.dns.__dict__["_all_fields"]["dns.resp.name"])
-            if match in resp:
-                ip = pkt.dns.__dict__["_all_fields"]["dns.a"]
+            if any(match in resp for match in matches):
+                ip.append(pkt.dns.__dict__["_all_fields"]["dns.a"])
                 break
         except:
             pass
     caps.close()
-    if ip == None:
+    if len(ip) == 0:
         raise("Cant find youtube video ip from dns")
     return ip
 
@@ -69,12 +71,19 @@ def plot_cdf(data,bw = 0.01,override_color = None):
     #plt.hist(data,cumulative=True)
 
 
+def get_filter_from_ips(ips):
+    res = ""
+    print(ips)
+    for i in range(len(ips)):
+        res = res + "ip.addr==".format(ips[i])
+        if (i != len(ips) -1):
+            res = res + "||"
+    return res
 
 
-
-def get_video_flow(youtube_ip,filename):
+def get_video_flow(youtube_ips,filename):
     res = []
-    caps = read_capture(filename, "ip.addr=={}".format(youtube_ip))
+    caps = read_capture(filename, get_filter_from_ips(youtube_ips))
     parse_packets(caps,res)
     return res
 
@@ -88,16 +97,26 @@ def plot_inter_packet_delay(video_packets):
     plt.xlim(0,0.2)
     plot_cdf(ys)
     
+def read_all_csvs(csvs):
+    li = []
+
+    for filename in csvs:
+        df = pd.read_csv(filename, index_col=None, header=0)
+        li.append(df)
+
+    frame = pd.concat(li, axis=0, ignore_index=True)
+    frame = frame.rename(columns=lambda x: x.strip())
+    return frame
 
 
 def main():
-    filename = "1reso.32VFLs1COxo.1636854279.4675097.pcap"
-    #filename = "5reso.32VFLs1COxo.1636833966.1925867.pcap"
-    #filename = "10reso.32VFLs1COxo.1636922170.4861689.pcap"
-    youtube_ip = get_youtube_video_ip(filename)
-    #youtube_ip = "34.104.35.123"
-    video_packets = get_video_flow(youtube_ip,filename)
-    plot_inter_packet_delay(video_packets)
+    parent_folder = os.getcwd() +"/production/traces"
+    folders = glob(parent_folder + "/*/")
+    for folder in folders:
+        csvs = glob(folder+"/*.csv")        
+        df = read_all_csvs(csvs)
+        df.BYTES.hist(cumulative= True,bins=1000,density=1)
+        break
 
     plt.show()
 

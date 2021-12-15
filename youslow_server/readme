@@ -1,0 +1,2 @@
+5-12-2021 I decide to collect new traces of 3min TCP mini-movie to see if there is an improvement in network, all session waits for 5 seconds for traffic to transmit before it closes.
+9-12-2021 I now collect traffic in interleaving fashion, always QUIC enabled first, then TCP. QUIC -> 1 minute-> TCP ->10 minute.

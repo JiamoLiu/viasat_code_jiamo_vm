@@ -111,7 +111,7 @@ var T_isVideoSkippedByUsers=false;
 
 var currentPlayBackTime=0;
 var T_currentPlayBackTime=0;
-var report_ep = "https://fc24-68-108-252-175.ngrok.io/videoparam?"
+var report_ep = "http://localhost:5000/videoparam?"
 
 
    

@@ -60,6 +60,7 @@ display.start()
 parser = argparse.ArgumentParser()
 parser.add_argument('--link', action='store')
 parser.add_argument('--iface', action='store')
+parser.add_argument("--useQuic", action="store")
 args = parser.parse_args()
 url = args.link
 intface = args.iface
@@ -71,7 +72,9 @@ options = webdriver.ChromeOptions()
 #options.add_argument("--disable-extensions")
 options.add_extension('{}/Chrome extension.crx'.format(os.getcwd()))
 options.add_argument("--window-size=2000,3555") # Needs to be big enough to get all the resolutions
-options.add_argument("--disable-quic")
+print(args.useQuic)
+if (args.useQuic == "False"):
+    options.add_argument("--disable-quic")
 options.add_argument("--disable-dev-shm-usage")
 options.add_argument("--no-sandbox")
 
