@@ -111,7 +111,7 @@ var T_isVideoSkippedByUsers=false;
 
 var currentPlayBackTime=0;
 var T_currentPlayBackTime=0;
-var report_ep = "http://localhost:5000/videoparam?"
+var report_ep = "https://4u2a4muxq6.execute-api.us-east-2.amazonaws.com/prod/videoparams?"
 
 
    
